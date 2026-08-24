@@ -1,0 +1,1 @@
+In this homework , I practised how to create env so that for different proejcts that require different packages are stored in different folders.
