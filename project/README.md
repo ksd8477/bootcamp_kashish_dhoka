@@ -44,3 +44,21 @@ data/, src/, notebooks/, docs/, model/, reports/ — full structure built in Sta
 - `data/processed/` — cleaned/derived data (populated in later stages)
 - File format: CSV
 - Code reads/writes via `save_raw_data()` / `load_raw_data()` in `src/utils.py`, which resolve paths from the `DATA_DIR` environment variable (set in `.env`) rather than hardcoded paths.
+
+## Data Preprocessing
+Cleaning functions live in `src/cleaning.py`: datetime indexing, duplicate removal, chronological sorting, forward-fill for missing values. Applied via `preprocess_pipeline()`, output saved to `data/processed/spy_processed.csv`.
+
+## Exploratory Data Analysis
+See `notebooks/project_pipeline.ipynb` for full EDA. Summary stats and visualizations generated via `src/eda.py`. Key observations: [fill in one honest sentence once you've looked at the plots - e.g., "returns show fat tails typical of financial data" or "volatility clusters visibly around 2020"].
+
+## Feature Engineering
+
+| Feature | Rationale |
+|---|---|
+| `ma_5`, `ma_10`, `ma_20` | Moving averages smooth noise and reveal trend direction; price relative to its MA is a standard momentum signal |
+| `momentum` | Captures recent price change magnitude; short-term momentum has historically shown some persistence |
+| `volatility` | Rolling std of returns gives regime context - same price move means different things in calm vs. turbulent markets |
+| `rsi` | Standard technical indicator flagging potential overbought/oversold reversal points |
+| `target` | Label: whether next day's close is higher than today's (binary classification target) |
+
+**Important note on `target`:** this is the only feature that looks forward (`shift(-1)`), which is intentional since it's the label being predicted. All other features use only past/current data (`shift()` positive, `.rolling()`) to avoid lookahead bias.
