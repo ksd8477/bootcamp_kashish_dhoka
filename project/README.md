@@ -62,3 +62,29 @@ See `notebooks/project_pipeline.ipynb` for full EDA. Summary stats and visualiza
 | `target` | Label: whether next day's close is higher than today's (binary classification target) |
 
 **Important note on `target`:** this is the only feature that looks forward (`shift(-1)`), which is intentional since it's the label being predicted. All other features use only past/current data (`shift()` positive, `.rolling()`) to avoid lookahead bias.
+
+## Modeling
+
+**Approach:** Binary classification (next-day direction), using walk-forward
+validation across 5 time-ordered folds — never a random split, since shuffling
+would leak future information into training.
+
+**Models compared:** Logistic Regression and Random Forest, both wrapped in a
+sklearn Pipeline (StandardScaler + model) for reproducibility.
+
+**Key assumption:** Each fold trains only on data prior to its test period,
+simulating how the model would actually be used in production.
+
+**Risk-aware interpretation:** The confusion matrix for the final fold shows the
+logistic regression model predicted class 1 ("up") for all 481 test observations,
+never once predicting class 0 ("down"). This confirms the model collapsed to a
+majority-class strategy rather than learning a genuine signal from the engineered
+features (moving averages, momentum, volatility, RSI). Reported accuracy (~56%
+in this fold) is mathematically equivalent to the base rate of "up" days in the
+test period, not evidence of predictive skill. This is a common, honest outcome
+when testing simple technical features against an efficiently-priced, liquid
+asset like SPY, and underscores why accuracy alone is an insufficient metric for
+evaluating trading signals — a model with 99% accuracy that never predicts "down"
+would look impressive while being equally useless.
+
+![Confusion Matrix](reports/images/confusion_matrix.png)
