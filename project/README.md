@@ -124,3 +124,42 @@ is a common, honest result for daily-direction prediction on a liquid, heavily
 traded asset — it does not indicate a flaw in the process, but rather that
 robust validation successfully caught an illusory pattern before it could be
 mistaken for a real trading edge.
+
+## Setup Instructions (fresh clone)
+1. Clone the repo
+2. `conda create --name bootcamp_env python=3.10 && conda activate bootcamp_env`
+3. `pip install -r requirements.txt`
+4. `cp .env.example .env` and fill in values
+5. Run `notebooks/project_pipeline.ipynb` top to bottom
+6. In a separate terminal: `python app.py` to launch the API
+
+## Example API Request
+POST http://127.0.0.1:5000/predict
+Body: {"ma_5": ..., "ma_10": ..., "ma_20": ..., "momentum": ..., "volatility": ..., "rsi": ...}
+Response: {"prediction": 1, "meaning": "1=up, 0=down"}
+
+## Stakeholder Handoff Summary
+
+**Overview:** End-to-end pipeline testing whether technical price features
+predict SPY's next-day direction, from raw data through a deployable API.
+
+**Key findings:** The model does not outperform a naive majority-class
+baseline (see Stage 11/12 evaluation) — confirmed via walk-forward validation
+and bootstrap confidence intervals.
+
+**Recommendation:** Do not use this signal for real capital allocation as-is.
+Valuable as a rigorously validated negative result and a reusable pipeline
+for testing future signal candidates.
+
+**Assumptions & limitations:** Daily OHLCV only, no intraday or macro data;
+next-day horizon only; technical features only, no fundamental data.
+
+**Risks:** Any future signal must pass the same baseline-comparison bar
+before being trusted; higher apparent accuracy should trigger leakage
+suspicion, not confidence.
+
+**Using the deliverables:** Run the notebook for full analysis and charts;
+use the Flask API (`/predict`) for programmatic access to the trained model.
+
+**Suggested next steps:** Test longer horizons, incorporate non-price
+features, apply this same validation framework to new candidate signals.

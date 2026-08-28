@@ -9,6 +9,24 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, confu
 
 FEATURE_COLS = ["ma_5", "ma_10", "ma_20", "momentum", "volatility", "rsi"]
 
+import joblib
+
+def save_model(pipeline, path="model/model.pkl"):
+    joblib.dump(pipeline, path)
+    print(f"Model saved to {path}")
+
+def load_model(path="model/model.pkl"):
+    return joblib.load(path)
+
+def predict_direction(pipeline, feature_row):
+    """
+    Takes a single row of features (dict or DataFrame row) and returns
+    the predicted direction: 1 = up, 0 = down.
+    """
+    if isinstance(feature_row, dict):
+        feature_row = pd.DataFrame([feature_row])
+    pred = pipeline.predict(feature_row[FEATURE_COLS])[0]
+    return int(pred)
 
 def walk_forward_split(df, n_splits=5):
     """

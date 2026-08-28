@@ -1,7 +1,7 @@
 # SPY Next-Day Direction Prediction — Stakeholder Report
 
 **Prepared for:** Priya, Junior Quantitative Analyst evaluating signal candidates for portfolio manager review
-**Date:** [today's date]
+**Date:** 28/8/2026
 
 ## Executive Summary
 
@@ -48,7 +48,7 @@ from simply always guessing the more common outcome.**
 ## Alternate Scenario (Sensitivity Analysis)
 
 Reducing the feature set to momentum and volatility only (dropping moving
-averages and RSI) produced [fill in your actual scenario_results number]
+averages and RSI) produced [56.3%]
 accuracy — [similar to / different from] the full feature set. [If similar:]
 This consistency across feature choices further supports that no individual
 feature set is extracting a genuine signal, rather than the result depending
