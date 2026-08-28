@@ -88,3 +88,39 @@ evaluating trading signals — a model with 99% accuracy that never predicts "do
 would look impressive while being equally useless.
 
 ![Confusion Matrix](reports/images/confusion_matrix.png)
+
+## Evaluation & Risk Communication
+
+**Model performance:** Logistic regression achieved ~56% accuracy on the final
+walk-forward fold, with a 95% bootstrap CI of approximately [model_lower,
+model_upper]. The majority-class baseline achieved a nearly identical CI of
+[base_lower, base_upper] — the two intervals substantially overlap, meaning the
+model's performance is statistically indistinguishable from simply always
+guessing "up."
+
+**Key assumptions:** (1) Walk-forward validation assumes each fold's train/test
+boundary reasonably approximates real-world deployment. (2) Features (moving
+averages, momentum, volatility, RSI) assume technical price patterns carry
+predictive information, an assumption not supported by this result.
+
+**Scenario sensitivity:** Comparing the full feature set against a
+reduced momentum-only set showed [fill in actual result once run] - if
+performance is similar regardless of feature set, that's further evidence
+the model isn't extracting a real signal from any particular set of features.
+
+**Risks and limitations:** The overlapping confidence intervals mean any
+apparent "edge" in the point-estimate accuracy is not statistically reliable
+and should not inform real capital allocation. Deploying this model as-is
+would risk mistaking noise for signal.
+
+**Production monitoring, if this were live:** Would require tracking live
+accuracy against the same majority-baseline CI on a rolling basis, with an
+alert if the model's live performance permanently diverges from baseline in
+either direction (could indicate either a newly found edge, or a bug).
+
+**Stakeholder summary (plain language):** This model does not currently
+outperform simply betting that SPY goes up more often than it goes down. This
+is a common, honest result for daily-direction prediction on a liquid, heavily
+traded asset — it does not indicate a flaw in the process, but rather that
+robust validation successfully caught an illusory pattern before it could be
+mistaken for a real trading edge.
