@@ -38,3 +38,9 @@ Communicate findings and honest limitations to a stakeholder → Reporting & Del
 
 ## Repo Plan
 data/, src/, notebooks/, docs/, model/, reports/ — full structure built in Stage 02, populated stage by stage through the course.
+
+## Data Storage
+- `data/raw/` — unedited source data as pulled from Yahoo Finance
+- `data/processed/` — cleaned/derived data (populated in later stages)
+- File format: CSV
+- Code reads/writes via `save_raw_data()` / `load_raw_data()` in `src/utils.py`, which resolve paths from the `DATA_DIR` environment variable (set in `.env`) rather than hardcoded paths.
